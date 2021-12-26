@@ -3,6 +3,9 @@ The instruction is divided into two manuals. For the server where the VPN will b
 
 - [VPN Server](https://github.com/vzx7/vpn-setup/blob/main/vpn_server.md) - VPN Server deployment manual
 - [CA Server](https://github.com/vzx7/vpn-setup/blob/main/ca_server.md) - CA Server configuration manual
+
+Instructions are written for Linux servers  - (Debian or Ubuntu).
+
 # Denial of responsibility
 
 These instructions are informative in nature. If you use them, you yourself are solely responsible for the consequences that may arise.
