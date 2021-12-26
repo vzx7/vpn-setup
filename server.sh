@@ -69,9 +69,117 @@ sudo nano /etc/openvpn/server.conf
 
 # (12 step) Adjusting the Server Networking Configuration
 sudo nano /etc/sysctl.conf
-# Remove the “#” character from the beginning of the line to uncomment this setting
+
+# (13 step) Remove the “#” character from the beginning of the line to uncomment this setting
 # net.ipv4.ip_forward=1
 sudo sysctl -p
+
+# (14 step) Setup UFW (optional) get interface
+ip route | grep default
+# Output example: default via 203.0.113.1 dev eth0 proto static. this result shows the interface named "eth0"
+
+# (15 step) edit before rules
+sudo nano /etc/ufw/before.rules
+
+# Add rules to the beginning of the file, remove the "#" sign. Replace 'eth0' with your interface.
+
+#*nat
+#:POSTROUTING ACCEPT [0:0]
+#-A POSTROUTING -s 10.8.0.0/8 -o eth0 -j MASQUERADE
+#COMMIT
+
+# (16 step) find the DEFAULT_FORWARD_POLICY directive and change the value from DROP to ACCEPT
+sudo nano /etc/default/ufw
+
+# example
+#DEFAULT_FORWARD_POLICY="ACCEPT"
+# remove tunnel detection (two-way ping) in VPN
+# add rules for icmp
+#-A ufw-before-input -p icmp --icmp-type echo-request -j DROP
+
+# (17 step) add rules for udp and OpenSSH
+sudo ufw allow 1194/udp
+sudo ufw allow OpenSSH
+sudo ufw disable
+sudo ufw enable
+
+# (18 step) Starting and Enabling the OpenVPN Service
+sudo systemctl start openvpn@server
+# check status
+sudo systemctl status openvpn@server
+# permanent start
+sudo systemctl enable openvpn@server
+
+# (19 steps) Creating the Client Configuration Infrastructure
+mkdir -p ~/client-configs/files
+cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/client-configs/base.conf
+
+# (20 step) edit client rules
+nano ~/client-configs/base.conf
+
+# edit and remove "#"
+# remote your_server_ip 1194
+# proto udp4
+# user nobody
+# group nogroup
+
+# Find the directives that set the ca, cert, and key. Comment out these directives since you will add the certs and keys within the file itself shortly
+# #ca ca.crt
+# #cert client.crt
+# #key client.key
+
+# Similarly, comment out the tls-auth directive, as you will add ta.key directly into the client configuration file:
+# #tls-auth ta.key 1
+
+# Mirror the cipher and auth settings that you set in the /etc/openvpn/server.conf file
+# cipher AES-256-CBC
+# auth SHA256
+
+# Next, add the key-direction directive somewhere in the file. You must set this to “1” for the VPN to function correctly on the client machine
+# key-direction 1
+
+# Finally, add a few commented out lines to handle various methods that Linux based VPN clients will use for DNS resolution. You’ll add two similar, but separate sets of commented out lines. The first set is for clients that do not use systemd-resolved to manage DNS. These clients rely on the resolvconf utility to update DNS information for Linux clients
+
+#; script-security 2
+#; up /etc/openvpn/update-resolv-conf
+#; down /etc/openvpn/update-resolv-conf
+
+# Now add another set of lines for clients that use systemd-resolved for DNS resolution:
+
+#; script-security 2
+#; up /etc/openvpn/update-systemd-resolved
+#; down /etc/openvpn/update-systemd-resolved
+#; down-pre
+#; dhcp-option DOMAIN-ROUTE .
+
+# (21 step) move a script "make_client_config.sh" to ~/client-configs/
+# add x rule for the sript
+chmod 700 ~/client-configs/make_client_config.sh
+
+# (22 step) Generating Client Configurations for "client1"
+cd ~/client-configs
+sudo ./make_config.sh client1
+ls ~/client-configs/files
+# Output: client1.ovpn
+
+# (23 step) You need to transfer this file to the device you plan to use as the client.
+sftp sammy@your_server_ip:client-configs/files/client1.ovpn ~/
+
+# use openvpn3
+# https://openvpn.net/cloud-docs/openvpn-3-client-for-linux/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

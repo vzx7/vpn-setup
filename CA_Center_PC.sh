@@ -54,6 +54,8 @@ cd EasyRSA-3.0.8/
 # (10 step) export client crt to server
 scp pki/issued/client1.crt sammy@your_server_ip:/tmp
 
+#This entire procedure must be repeated for each client every time. Create new certificates for clients.
+
 
 
 
