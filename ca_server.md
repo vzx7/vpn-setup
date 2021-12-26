@@ -19,7 +19,7 @@ cp vars.example vars
 nano vars
 ```
 Once the file is opened, paste in the following lines and edit each highlighted value to reflect your own organization info. The important part here is to ensure that you do not leave any of the values blank
-
+```
 set_var EASYRSA_REQ_COUNTRY    "US"
 set_var EASYRSA_REQ_PROVINCE   "NewYork"
 set_var EASYRSA_REQ_CITY       "New York City"
@@ -28,7 +28,7 @@ set_var EASYRSA_REQ_EMAIL      "admin@example.com"
 set_var EASYRSA_REQ_OU         "Community"
 set_var EASYRSA_ALGO           "ec"
 set_var EASYRSA_DIGEST         "sha512"
-
+```
 ## (4 step) init pki 
 ```bash
 ./easyrsa init-pki
