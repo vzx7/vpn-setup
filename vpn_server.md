@@ -59,7 +59,8 @@ sudo nano /etc/openvpn/server.conf
 ```
 remove the “;” to uncomment it or add rules:
 ```
-proto udp4
+port 1194 # port 443
+proto udp4 # or proto tcp (if you use port 443)
 tls-auth ta.key 0 
 ;cipher AES-256-CBC
 cipher AES-256-GCM
@@ -115,7 +116,7 @@ Add rules for icmp.
 ```
 ## (12 step) add rules for udp and OpenSSH
 ```bash
-sudo ufw allow 1194/udp
+sudo ufw allow 1194/udp # or 443/tcp 
 sudo ufw allow OpenSSH
 sudo ufw disable
 sudo ufw enable
