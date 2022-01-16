@@ -134,8 +134,8 @@ nano ~/client-configs/base.conf
 ```
 Inside, locate the remote directive. This points the client to your OpenVPN server address — the public IP address of your OpenVPN server. If you decided to change the port that the OpenVPN server is listening on, you will also need to change 1194 to the port you selected.
 ```bash
-remote your_server_ip 1194
-proto udp4
+remote your_server_ip 1194 # or port 443
+proto udp4 # or proto tcp (if you use port 443)
 user nobody
 group nogroup
 cipher AES-256-GCM

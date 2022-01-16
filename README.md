@@ -7,7 +7,7 @@ The instruction is divided into two manuals. For the server where the VPN will b
 Instructions are written for Linux servers  - (Debian or Ubuntu).
 
 # Fixing a DNS Leak
-If the client is used on a linux operating system and you are using NetworkManager, use [dns_reset.sh](https://github.com/vzx7/vpn-setup/blob/main/dns_reset.sh) script.
+If the client is used on a linux operating system and you are using NetworkManager, use [dns_reset.sh](https://github.com/vzx7/vpn-setup/blob/main/dns_reset.sh) script. Otherwise use *script-security 2* scripts in client config.
 
 # Denial of responsibility
 
